@@ -24,17 +24,28 @@ public class BSTree {
 	 */
 	public void insert(int value)
 	{
-
-		if(root == null) {
-			BSTree(value);
-		} else if (value == root.getValue()) {
-			this.root = this.root;
-		} else if (value < root.getValue()) {
-			
-		}
+		this.root = insertHelper(this.root, value);
 	}
 	
-	// TODO: Implement additional methods here (if needed).
+	public TreeNode insertHelper(TreeNode root2, int value) {
+		
+		if(this.root == null) {
+			return new BSTreeNode(value);
+		} else if (value == root.getValue()) {
+			return root;
+		} else if (value < root.getValue()) {
+			BSTreeNode temp = new BSTreeNode(root.getValue());
+			temp.setLeftChild(insertHelper(root.getLeftChild(), value));
+			temp.setRightChild(root.getRightChild());
+			return temp;
+		} else {
+			BSTreeNode temp = new BSTreeNode(root.getValue());
+			temp.setRightChild(insertHelper(root.getRightChild(), value));
+			temp.setLeftChild(root.getLeftChild());
+			return temp;
+		}	
+		
+	}
 	
 	
 	
@@ -48,6 +59,12 @@ public class BSTree {
 	 */
 	public TreeNode search(int value)
 	{
+		if (value == root.getValue()) {
+			return this.root;
+		} else {
+			((BSTree) root.getLeftChild()).search(value);
+			((BSTree) root.getRightChild()).search(value);
+		}
 		// TODO: Implement the algorithm here.
 		return null;
 	}
