@@ -2,12 +2,12 @@ package Main;
 
 public class BSTree {
 	private TreeNode root;
-	
+
 	/**
 	 * Constructor for an empty binary search tree.
 	 */
 	public BSTree(){}
-	
+
 	/**
 	 * Constructor for a binary search tree that contains the given element.
 	 * @param value the value to be inserted.
@@ -16,7 +16,7 @@ public class BSTree {
 	{
 		this.root = new BSTreeNode(value); //rooooooot
 	}
-	
+
 	/**
 	 * Inserts a given value in the binary search tree.
 	 * (3 Punkte)
@@ -24,33 +24,27 @@ public class BSTree {
 	 */
 	public void insert(int value)
 	{
-		this.root = insertHelper(this.root, value);
+		this.root = insertHelper(value, this.root);
+
 	}
-	
-	public TreeNode insertHelper(TreeNode root2, int value) {
-		
-		if(this.root == null) {
-			return new BSTreeNode(value);
-		} else if (value == root.getValue()) {
-			return root;
-		} else if (value < root.getValue()) {
-			BSTreeNode temp = new BSTreeNode(root.getValue());
-			temp.setLeftChild(insertHelper(root.getLeftChild(), value));
-			temp.setRightChild(root.getRightChild());
-			return temp;
-		} else {
-			BSTreeNode temp = new BSTreeNode(root.getValue());
-			temp.setRightChild(insertHelper(root.getRightChild(), value));
-			temp.setLeftChild(root.getLeftChild());
-			return temp;
-		}	
-		
+
+
+	private TreeNode insertHelper(int value, TreeNode root2) {
+
+		if (root2 == null) {
+			root2 = new BSTreeNode(value);
+		} else if (value < root2.getValue()) {
+			root2.setLeftChild(insertHelper(value, root2.getLeftChild()));
+		} else if (value > root2.getValue()) {
+			root2.setRightChild(insertHelper(value, root2.getRightChild()));
+		} 
+
+		return root2;
+
+
+
 	}
-	
-	
-	
-	
-	
+
 	/**
 	 * Determines whether or not a given value is within the binary search tree.
 	 * (2 Punkte)
@@ -59,21 +53,22 @@ public class BSTree {
 	 */
 	public TreeNode search(int value)
 	{
-		if (value == root.getValue()) {
-			return this.root;
-		} else {
-			((BSTree) root.getLeftChild()).search(value);
-			((BSTree) root.getRightChild()).search(value);
+		if (root == null) {
+			return null;
+		} else if (value == root.getValue()) {
+			return root;
+		} else if (value < root.getValue()) {
+			return ((BSTree) root.getLeftChild()).search(value);
+		} else if (value > root.getValue()) {
+			return ((BSTree) root.getRightChild()).search(value);
 		}
-		// TODO: Implement the algorithm here.
+		
 		return null;
+
 	}
-	
-	// TODO: Implement additional methods here (if needed).
-	
-	
-	
-	
+
+
+
 	/**
 	 * Returns the tree node containing the maximum element, or null if this tree is empty.
 	 * (1 Punkt)
@@ -81,15 +76,22 @@ public class BSTree {
 	 */
 	public TreeNode maximum()
 	{
-		// TODO: Implement the algorithm here.
-		return null;
-	}
-	
-	// TODO: Implement additional methods here (if needed).
+		if(root == null) 
+			return null;
+		else
+			return maxHelper(this.root);
 
-	
-	
-	
+	}
+
+	public TreeNode maxHelper(TreeNode root) {	
+		if(root.getRightChild() == null)
+			return root;
+		else 
+			return maxHelper(root.getRightChild());
+	}
+
+
+
 	/**
 	 * Returns the tree node containing the minimum element, or null if this tree is empty.
 	 * (1 Punkt)
@@ -97,16 +99,23 @@ public class BSTree {
 	 */
 	public TreeNode minimum()
 	{
-		// TODO: Implement the algorithm here.
-		return null;
+		if(root == null) 
+			return null;
+		else
+			return minHelper(this.root);
+
 	}
-	
-	// TODO: Implement additional methods here (if needed).
-	
-	
-	
-	
-	
+
+	public TreeNode minHelper(TreeNode root) {	
+		if(root.getLeftChild() == null)
+			return root;
+		else 
+			return minHelper(root.getLeftChild());
+	}
+
+
+
+
 	/**
 	 * Deletes and returns a values from the binary search tree.
 	 * (5 Punkte)
@@ -114,15 +123,34 @@ public class BSTree {
 	 */
 	public TreeNode delete(int value)
 	{
-		// TODO: Implement the algorithm here.
-		return null;
+
+		return delHelper(value, this.root);
 	}
-	
-	// TODO: Implement additional methods here (if needed).
-	
-	
-	
+
+	private TreeNode delHelper(int value, TreeNode root2) {
+
+		if (root == null) {
+			return null;
+		} else if (value < root2.getValue()) {
+			root2.setLeftChild(delHelper(value, root2.getLeftChild()));
+		} else if (value > root2.getValue()) {
+			root2.setRightChild(delHelper(value, root2.getRightChild()));
+		} else if (value == root2.getValue() && root2.getLeftChild() == null) {
+			root2 = root2.getRightChild();
+		} else if (value == root2.getValue() && root2.getRightChild() == null) {
+			root2 = root2.getLeftChild();
+		} else if (value == root2.getValue()) { 
+			root2.setValue(((BSTree) root2.getRightChild()).minimum().getValue());
+			root2.setRightChild(delHelper(((BSTree) root2.getRightChild()).minimum().getValue(), root2.getRightChild()));
+		}
 		
+		return root2;
+	}
+
+
+
+
+
 	/**
 	 * Prints the elements of this binary search tree in an inorder traversal.
 	 */
@@ -131,7 +159,7 @@ public class BSTree {
 		this.inorderTreeTraversal(this.root);
 		System.out.println();
 	}
-	
+
 	private void inorderTreeTraversal(TreeNode x)
 	{
 		if (x != null)
