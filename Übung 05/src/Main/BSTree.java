@@ -53,21 +53,25 @@ public class BSTree {
 	 */
 	public TreeNode search(int value)
 	{
-		if (root == null) {
+		return searchHelper(this.root, value);
+	}
+	
+	
+
+	private TreeNode searchHelper(TreeNode root2, int value) {
+
+		if (root2 == null) {
 			return null;
-		} else if (value == root.getValue()) {
-			return root;
-		} else if (value < root.getValue()) {
-			return ((BSTree) root.getLeftChild()).search(value);
-		} else if (value > root.getValue()) {
-			return ((BSTree) root.getRightChild()).search(value);
+		} else if (value == root2.getValue()) {
+			return root2;
+		} else if (value < root2.getValue()) {
+			return searchHelper(root2.getLeftChild(), value);
+		} else if (value > root2.getValue()) {
+			return searchHelper(root2.getRightChild(), value);
 		}
 		
 		return null;
-
 	}
-
-
 
 	/**
 	 * Returns the tree node containing the maximum element, or null if this tree is empty.
@@ -129,19 +133,22 @@ public class BSTree {
 
 	private TreeNode delHelper(int value, TreeNode root2) {
 
-		if (root == null) {
+		if (root2 == null) {
 			return null;
 		} else if (value < root2.getValue()) {
 			root2.setLeftChild(delHelper(value, root2.getLeftChild()));
+			return root2;
 		} else if (value > root2.getValue()) {
 			root2.setRightChild(delHelper(value, root2.getRightChild()));
-		} else if (value == root2.getValue() && root2.getLeftChild() == null) {
-			root2 = root2.getRightChild();
+			return root2;
 		} else if (value == root2.getValue() && root2.getRightChild() == null) {
-			root2 = root2.getLeftChild();
-		} else if (value == root2.getValue()) { 
+			return root2.getLeftChild();
+		} else if (value == root2.getValue() && root2.getLeftChild() == null) {
+			return root2.getRightChild();
+		} else if (value == root2.getValue()) {
 			root2.setValue(((BSTree) root2.getRightChild()).minimum().getValue());
-			root2.setRightChild(delHelper(((BSTree) root2.getRightChild()).minimum().getValue(), root2.getRightChild()));
+			root2.setRightChild(delHelper(root2.getValue(), root2.getRightChild()));
+			return root2;
 		}
 		
 		return root2;
