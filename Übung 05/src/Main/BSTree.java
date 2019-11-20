@@ -14,7 +14,7 @@ public class BSTree {
 	 */
 	public BSTree(int value)
 	{
-		this.root = new BSTreeNode(value);
+		this.root = new BSTreeNode(value); //rooooooot
 	}
 	
 	/**
